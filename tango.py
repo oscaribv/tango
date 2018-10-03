@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-#             TANGO: Transit ANimation GO 
+#       TANGO: Transit ANimation for General Orbits 
 #             October 2018, Oscar Barragan
 #---------------------------------------------------------------
 
@@ -22,8 +22,6 @@ npl = len(P)
 #Read the data file
 t, f, e = np.loadtxt(fname,unpack=True,usecols=(0,1,2))
 
-tmax =  min(t) + tmin + tmax
-
 error_mean = np.mean(e)
 sigma3 = 3*error_mean
 
@@ -38,7 +36,7 @@ for o in range(0,npl):
   #Fill vector with parameters
   pars2[o][:] = [Tp,P[o],e[o],w[o],inclination[o],a[o],rp[o]]
 
-xtr_model = np.arange(min(t),max(t),0.001)
+xtr_model = np.arange(min(t),max(t),0.0025)
 fluxtr_model = pti.flux_tr(xtr_model,pars2.transpose(),[0,0,0,0],[u1,u2],n_cad,t_cad)
 fluxtr_model = fluxtr_model*100
 
@@ -47,7 +45,7 @@ nu = [None]*npl
 R = [None]*npl
 X = [None]*npl
 Y = [None]*npl
-min_t = min(t) + tmin + size_time/2.0 
+min_t =  tmin + size_time/2.0 
 ptime = np.arange(min_t,max(t),vel_time)
 for o in range(0,npl):
   nu[o] = pti.find_anomaly_tp(ptime,pars2[o][0],e[o],P[o]) 
@@ -59,8 +57,8 @@ for o in range(0,npl):
 
 
 continuar = True
-min_loc = min(t) + tmin
-max_loc = min(t) + tmin + size_time
+min_loc = tmin
+max_loc = tmin + size_time
 n = 1
 while continuar:
   estet = []

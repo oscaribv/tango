@@ -1,11 +1,12 @@
+
 lang = 'english' #english or spanish
 
 fname = 'GJ9827_new_lc.dat'
 
-size_time = 0.5 #days
-vel_time  = 1./100.
-tmax =  2. #days
-tmin =  7796 - 7738.4
+size_time = 0.5 
+vel_time  = 0.005
+tmin =  7796.2
+tmax =  7797.4
 
 #colors
 cmodel = "#34495e"
@@ -22,6 +23,7 @@ w = [0,0,0]
 rp = [0.0232259,0.0181983,0.0299279]
 inclination = [88.330714*np.pi/180,89.06*np.pi/180,87.702*np.pi/180]
 a = [7.229235,15.096,21.5019118]
+
 u1 =  0.5771
 u2 =   0.146
 n_cad = 10
