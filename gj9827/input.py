@@ -1,7 +1,7 @@
 
 lang = 'english' #english or spanish
 
-fname = 'GJ9827_new_lc.dat'
+lcname = 'GJ9827_new_lc.dat'
 
 size_time = 0.5 
 vel_time  = 0.005
@@ -14,6 +14,8 @@ cdata = "#e74c3c"
 cstar = "#ffbf00"
 
 is_plot_errorbars = True
+
+is_plot_model = False
 
 #Create the system model
 P =[1.2089662,3.6482269,6.2014190]

@@ -3,9 +3,6 @@
 #             October 2018, Oscar Barragan
 #---------------------------------------------------------------
 
-#routine to compute time of periastron without pyaneti
-#option to save the files inside a directory with the name of the system
-#non-mandatory use of pyaneti
 #Readme file
 
 #Load libraries
@@ -13,17 +10,17 @@ import sys
 from matplotlib import gridspec
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-sns.set_color_codes()
-sns.set(style='ticks')
 
-execfile('input.py')
+#Start TANGO as ./tango.py system
+system = str(sys.argv[1])
+
+execfile(system+'/input.py')
 
 #number of planets
 npl = len(P)
 
 #Read the data file
-t, f, e = np.loadtxt(fname,unpack=True,usecols=(0,1,2))
+t, f, e = np.loadtxt(system+'/'+lcname,unpack=True,usecols=(0,1,2))
 
 error_mean = np.mean(e)
 sigma3 = 3*error_mean
@@ -166,7 +163,7 @@ while continuar:
     plt.ylabel('Sky [$R_\star$]')
   plt.annotate('@oscaribv',xy=(0.84,0.91),xycoords='figure fraction',alpha=0.7,fontsize=10)
 #
-  file_name = 'system-'
+  file_name = system + '/' + system + '-'
   m = n
   if (n == 0):
     m = 1
