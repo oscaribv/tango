@@ -14,8 +14,6 @@ from matplotlib import gridspec
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-#Import pyaneti code
-import pyaneti as pti
 sns.set_color_codes()
 sns.set(style='ticks')
 
@@ -43,6 +41,22 @@ def find_tp(T0,e,w,P):
   theta_p = theta_p - e * np.sin(theta_p)
   Tp = T0 - theta_p * P / 2. / np.pi
   return Tp
+
+#This function calculates the true anomaly
+#----------------------------------------------------------
+def find_anomaly(t,Tp,e,P):
+  mean = 2.*np.pi * ( t - Tp) / P                     #mean anomaly
+  true = mean + e * np.sin(mean)                      #guess
+  f = true - e * np.sin(true) - mean                  #first value of function f
+  for o in range(0,len(t)):                           #iterate for all the values
+      while np.abs(f[o]) > 1e-6:                      #Newton-Raphson condition
+        f[o] = true[o] - e*np.sin(true[o]) - mean[o]  #calculate  f
+        df   = 1. - e * np.cos(true[o])               #Calculate df
+        true[o] = true[o] - f[o]/df                   #Update the eccentric anomaly
+  eimag = np.sqrt(1. - e*e)*np.sin(true)              #Time to calculate true anomaly
+  ereal = np.cos(true) - e
+  true  = np.arctan2(eimag,ereal)                     #Get True anomaly from ecc anomaly
+  return true
 #----------------------------------------------------------
 
 #Create the flux vector
@@ -54,9 +68,13 @@ for o in range(0,npl):
   #Fill vector with parameters
   pars2[o][:] = [Tp,P[o],e[o],w[o],inclination[o],a[o],rp[o]]
 
-xtr_model = np.arange(min(t),max(t),0.0025)
-fluxtr_model = pti.flux_tr(xtr_model,pars2.transpose(),[0,0,0,0],[u1,u2],n_cad,t_cad)
-fluxtr_model = fluxtr_model*100
+
+if is_plot_model:
+  #Import pyaneti code
+  import pyaneti as pti
+  xtr_model = np.arange(min(t),max(t),0.0025)
+  fluxtr_model = pti.flux_tr(xtr_model,pars2.transpose(),[0,0,0,0],[u1,u2],n_cad,t_cad)
+  fluxtr_model = fluxtr_model*100
 
 #Let us create the coordinates for the plot
 nu = [None]*npl
@@ -66,7 +84,7 @@ Y = [None]*npl
 min_t =  tmin + size_time/2.0 
 ptime = np.arange(min_t,max(t),vel_time)
 for o in range(0,npl):
-  nu[o] = pti.find_anomaly_tp(ptime,pars2[o][0],e[o],P[o]) 
+  nu[o] = find_anomaly(ptime,pars2[o][0],e[o],P[o])
 #We have the true anomaly, time to calculate R
   R[o] = a[o]*(1-e[o]**2)/(1. + e[o]*np.cos(nu[o]) ) 
   X[o] = - R[o] * ( np.cos(nu[o] + w[o]) )
@@ -89,10 +107,13 @@ while continuar:
       estet.append(t[o]) 
       estef.append(f[o]) 
       estee.append(e[o]) 
-  for o in range(len(xtr_model)):
-    if ( xtr_model[o] > min_loc and xtr_model[o] < max_loc - size_time/2. ):
-      modt.append(xtr_model[o]) 
-      modf.append(fluxtr_model[o]) 
+
+  #model
+  if is_plot_model:
+    for o in range(len(xtr_model)):
+      if ( xtr_model[o] > min_loc and xtr_model[o] < max_loc - size_time/2. ):
+        modt.append(xtr_model[o])
+        modf.append(fluxtr_model[o])
   #At this point we have all the data inside the window
   #time to plot
 #---------------------------------------------------------------
@@ -112,7 +133,7 @@ while continuar:
     plt.errorbar(estet,estef,estee,fmt='o',color=cdata)
   else:
     plt.plot(estet,estef,'o',color=cdata)
-  plt.plot(modt,modf,'k',color=cmodel)
+  if is_plot_model: plt.plot(modt,modf,'k',color=cmodel)
   plt.minorticks_on()
   plt.tick_params( axis='x',which='both',direction='in')
   plt.tick_params( axis='y',which='both',direction='in')
