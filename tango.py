@@ -7,6 +7,7 @@
 
 #Load libraries
 import sys
+import os
 from matplotlib import gridspec
 import numpy as np
 import matplotlib.pyplot as plt
@@ -181,4 +182,12 @@ while continuar:
     n = n + 1
 #---------------------------------------------------------------
 #                      END plot creation
+#---------------------------------------------------------------
+#                    Start  movie creation
+#---------------------------------------------------------------
+
+os.system('convert -delay 1/20 -resize x700  '+system+'/*.png '+system+'/'+system+'.mp4')
+
+#---------------------------------------------------------------
+#                    End movie creation
 #---------------------------------------------------------------
