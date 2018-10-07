@@ -3,6 +3,11 @@
 #             October 2018, Oscar Barragan
 #---------------------------------------------------------------
 
+#routine to compute time of periastron without pyaneti
+#option to save the files inside a directory with the name of the system
+#non-mandatory use of pyaneti
+#Readme file
+
 #Load libraries
 import sys
 from matplotlib import gridspec
@@ -28,11 +33,24 @@ sigma3 = 3*error_mean
 f = f*100.
 e = e*100.
 
+#This function calcualtes the time of periastron given
+#Time of minimum conjunction, eccentricit, angle of periastron, period.
+#----------------------------------------------------------
+def find_tp(T0,e,w,P):
+  ereal = e + np.cos(np.pi/2. - w)
+  eimag = np.sqrt(1. - e*e) * np.sin( np.pi / 2. - w )
+  theta_p = np.arctan2(eimag,ereal)
+  theta_p = theta_p - e * np.sin(theta_p)
+  Tp = T0 - theta_p * P / 2. / np.pi
+  return Tp
+#----------------------------------------------------------
+
 #Create the flux vector
 pars2 = np.zeros(shape=(npl,7))
 for o in range(0,npl):
   #Calculate time of periastron
-  Tp = pti.find_tp(T0[o],e[o],w[o],P[o])
+  #Tp = pti.find_tp(T0[o],e[o],w[o],P[o])
+  Tp = find_tp(T0[o],e[o],w[o],P[o])
   #Fill vector with parameters
   pars2[o][:] = [Tp,P[o],e[o],w[o],inclination[o],a[o],rp[o]]
 
