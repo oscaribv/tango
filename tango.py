@@ -3,8 +3,6 @@
 #             October 2018, Oscar Barragan
 #---------------------------------------------------------------
 
-#Readme file
-
 #Load libraries
 import sys
 import os
@@ -21,13 +19,13 @@ execfile(system+'/input.py')
 npl = len(P)
 
 #Read the data file
-t, f, e = np.loadtxt(system+'/'+lcname,unpack=True,usecols=(0,1,2))
+tvec, fvec, evec = np.loadtxt(system+'/'+lcname,unpack=True,usecols=(0,1,2))
 
-error_mean = np.mean(e)
+error_mean = np.mean(evec)
 sigma3 = 3*error_mean
 
-f = f*100.
-e = e*100.
+fvec = fvec*100.
+evec = evec*100.
 
 #This function calcualtes the time of periastron given
 #Time of minimum conjunction, eccentricit, angle of periastron, period.
@@ -70,7 +68,7 @@ for o in range(0,npl):
 if is_plot_model:
   #Import pyaneti code
   import pyaneti as pti
-  xtr_model = np.arange(min(t),max(t),0.0025)
+  xtr_model = np.arange(min(tvec),max(tvec),0.0025)
   fluxtr_model = pti.flux_tr(xtr_model,pars2.transpose(),[0,0,0,0],[u1,u2],n_cad,t_cad)
   fluxtr_model = fluxtr_model*100
 
@@ -80,7 +78,7 @@ R = [None]*npl
 X = [None]*npl
 Y = [None]*npl
 min_t =  tmin + size_time/2.0 
-ptime = np.arange(min_t,max(t),vel_time)
+ptime = np.arange(min_t,max(tvec),vel_time)
 for o in range(0,npl):
   nu[o] = find_anomaly(ptime,pars2[o][0],e[o],P[o])
 #We have the true anomaly, time to calculate R
@@ -100,11 +98,11 @@ while continuar:
   estee = []
   modt = []
   modf = []
-  for o in range(len(t)):
-    if ( t[o] > min_loc and t[o] < max_loc ):
-      estet.append(t[o]) 
-      estef.append(f[o]) 
-      estee.append(e[o]) 
+  for o in range(len(tvec)):
+    if ( tvec[o] > min_loc and tvec[o] < max_loc ):
+      estet.append(tvec[o])
+      estef.append(fvec[o])
+      estee.append(evec[o])
 
   #model
   if is_plot_model:
@@ -117,12 +115,13 @@ while continuar:
 #---------------------------------------------------------------
 #                         DATA
 #---------------------------------------------------------------
-  df = 0.13*(100.-min(f))
-  plt.figure(1,figsize=(8.,8.))
+  fsize = 4
+  df = 0.13*(100.-min(fvec))
+  plt.figure(1,figsize=(fsize,fsize))
   #plt.xkcd()
   gs = gridspec.GridSpec(nrows=2, ncols=1,height_ratios=[1.4, 1.])
   plt.subplot(gs[0])
-  plt.ylim(min(f)-df,max(f)+df)
+  plt.ylim(min(fvec)-df,max(fvec)+df)
   plt.xlim(min_loc,min_loc+size_time)
   plt.axvline(x=min_loc+size_time/2.,c='r',ls='--')
   plt.ticklabel_format(useOffset=False, axis='y')
@@ -135,12 +134,9 @@ while continuar:
   plt.minorticks_on()
   plt.tick_params( axis='x',which='both',direction='in')
   plt.tick_params( axis='y',which='both',direction='in')
-  if lang == 'spanish' : 
-    plt.xlabel('Tiempo en dias')
-    plt.ylabel('Porcentaje de luz de la estrella')
-  if lang == 'english' : 
-    plt.xlabel('Time [days]')
-    plt.ylabel('Stellar ligth [%]')
+  plt.tick_params(labelsize=fsize)
+  plt.xlabel(xlabel,fontsize=fsize)
+  plt.ylabel(ylabel,fontsize=fsize)
 #---------------------------------------------------------------
 #                         Star-planets
 #---------------------------------------------------------------
@@ -156,22 +152,19 @@ while continuar:
   plt.ylim(-1.5,1.5)
   plt.tick_params( axis='x',which='both',direction='in')
   plt.tick_params( axis='y',which='both',direction='in')
-  if lang == 'spanish' : 
-    plt.xlabel('Cielo')
-    plt.ylabel('Cielo')
-  if lang == 'english' : 
-    plt.xlabel('Sky [$R_\star$]')
-    plt.ylabel('Sky [$R_\star$]')
-  plt.annotate('@oscaribv',xy=(0.84,0.91),xycoords='figure fraction',alpha=0.7,fontsize=10)
+  plt.xlabel(skylabel,fontsize=fsize)
+  plt.ylabel(skylabel,fontsize=fsize)
+  plt.tick_params(labelsize=fsize)
+#  plt.annotate('@oscaribv',xy=(0.84,0.91),xycoords='figure fraction',alpha=0.7,fontsize=10)
 #
   file_name = system + '/' + system + '-'
   m = n
   if (n == 0):
     m = 1
-  for j in range(0,int(np.log10(len(t)))-int(np.log10(m))):
+  for j in range(0,int(np.log10(len(tvec)))-int(np.log10(m))):
      file_name = file_name + '0'
   file_name = file_name+str(n)+'.png'
-  plt.savefig(file_name,dpi=150,bbox_inches='tight')
+  plt.savefig(file_name,dpi=300,bbox_inches='tight')
   plt.close()
   #Now let us evolve the video
   min_loc = min_loc + vel_time
