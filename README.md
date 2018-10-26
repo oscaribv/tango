@@ -1,15 +1,17 @@
 
-# __TANGO__:Transit ANimation for General Orbits
-#### Written by Barragán O.
+# __TANGO__: Transit ANimation for General Orbits
+#### Written by Oscar Barragán
 ##### email: oscaribv@gmail.com
-##### Updated October 7, 2018
+##### Updated October 25, 2018
 
 
-### __Introduction__
+## __Introduction__
 
+A clear night gives us an instantaneous snapshot of the Universe. At first sight celestial bodies seem immutable. Their apparent immutability disappears if we add an important ingredient: *time*.
+The variability of their light – the so-called light curve – carries a wealth of precious information about the physical phenomena happening in faraway astronomical bodies.
 
-
-## __Light curves__
+Planets perform a gravitational *TANGO* around their parent stars which is called orbit.
+If the orbit inclination is close to 90°, the presence of a planet orbiting its host star can be inferred by detecting the periodic drops of stellar flux caused by the planet partly occulting the stellar disk. This phenomenon is called __transit__.
 
 
 ## Dependencies
@@ -17,12 +19,15 @@
 * numpy
 * matplotlib
 * seaborn (optional)
-* pyaneti (optional)
+* [pyaneti](https://github.com/oscaribv/pyaneti) (optional, needed if you want to plot the models)
 
 
-## Animate GJ 9827
+## Animate *K2* data of GJ 9827
 
-Just clone or download TANGO.
+The system GJ 9827 contains (at least) three transiting planets. They were discovered by *K2* on its Campaign 12 ( see [Niraula et al., 2017](http://iopscience.iop.org/article/10.3847/1538-3881/aa957c/meta), [Prieto-Arranz et al., 2018](https://www.aanda.org/articles/aa/abs/2018/10/aa32872-18/aa32872-18.html), and [Rodriguez et al., 2017](http://iopscience.iop.org/article/10.3847/1538-3881/aaa292/meta) for more details).
+The brightness of this star combined with the exquisite photometry of *Kepler*, give us a marvelous light curve where the three transiting planets are visible. During February 12, 2017, planets b, c and d transited the star consecutively, and this was observed by *Kepler*. __We will animate this!__
+
+First, just clone or download TANGO.
 
 ```
 git clone https://github.com/oscaribv/tango
@@ -31,21 +36,18 @@ git clone https://github.com/oscaribv/tango
 The advantage about cloning the repository is the possibility to follow the changes to this package easily with git pull (learn more about git
 at [https://git-scm.com/](https://git-scm.com/)).
 
-The next step is to enter the pyaneti folder and see what we can find inside it
+The next step is to enter the tango directory and see what we can find inside it
 
 ```
-cd pyaneti
+cd tango
 ls
-  LICENSE  src inpy  makefile  pyaneti.py  README.md
+  gj9827  README.md  tango.py
 ```
 
-Now compile the code typing ``make``
+You can see that there is a directory called gj9827. This directory contains the light curve and input file needed to create your animation. The file lc_gj9827.dat contains *K2* long cadence data collected between 2963.5 and 2964.3 (BJD - 2454833) days. In this window there are three consecutive transits of GJ 9827 b, c and d (I used the light curve provided by EVEREST to create this file).
 
-```
-make
-```
+So now we have the light curve that we want to animate. The next step is to create the input file which will be used to pass the orbit solutions to the code. If you open the input file you will see something like This
 
-If you have all the dependencies installed, the make procces should end without error.
 
 Now you are ready to run the code for the first time! Just type
 
@@ -63,166 +65,6 @@ python pyaneti.py test
 The program will start. You will see something like:
 
 ```
-==============================
-------------------------------
-    INITIAL CONFIGURATION
-------------------------------
-Star           = test
-No. planets    = 1
-------------------------------
-iter max       = 100000000
-thin factor    = 1
-nconv          = 500
-nwalkers       = 100
-------------------------------
-fit RV         = [True]
-fit Transit    = [True]
-------------------------------
-LC data        = free
-cadence time   =  30.000 min
-n rebinning    = 1
-Stellar priors = [True]
-------------------------------
-  PLANET testb
-------------------------------
-        PRIOR RANGES
-------------------------------
-T0 = u[ 2448285.0500 , 2448285.1500 ]
-P  = u[ 365.2060 , 365.3060 ]
-ew1= f[ 0.0000 , 1.0000 ]
-ew2= f[ 0.0000 , 1.0000 ]
-b  = f[ 0.0000 , 1.0000 ]
-a  = g[ 200.0000 , 250.0000 ]
-rp = u[ 0.0000 , 0.1000 ]
-K  = u[ 0.0000 , 0.0010 ]
-------------------------------
- Other parameter priors
-------------------------------
-q1 = g[ 0.3464 , 0.0500 ]
-q2 = g[ 0.2839 , 0.0500 ]
-Super_telescope = u[ 21.0719 , 23.0721 ]
-==============================
- CREATING RANDOM SEED
- CREATING CHAINS
-
- STARTING MCMC CALCULATION
- RV datapoints  =           36
- TR datapoints  =          112
- No. parameters =            8
- dof            =          140
- ==================================
-      Chain statistics
- ==================================
- chain |  reduced chi^2
- best  :   64667.93
- worst : **********
- mean  : **********
- ==================================
- STARTING INFINITE LOOP!
- ==================================
-      Chain statistics
- ==================================
- chain |  reduced chi^2
- best  :       0.95
- worst :       1.05
- mean  :       0.99
- ==================================
- ==================================
-      PERFOMING GELMAN-RUBIN
-       TEST FOR CONVERGENCE
- ==================================
- ==================================
- CHAINS HAVE NOT CONVERGED YET!
-         500  ITERATIONS MORE!
- ==================================
- ==================================
-      Chain statistics
- ==================================
- chain |  reduced chi^2
- best  :       0.95
- worst :       1.09
- mean  :       0.99
- ==================================
- ==================================
-      PERFOMING GELMAN-RUBIN
-       TEST FOR CONVERGENCE
- ==================================
- ==================================
-       CHAINS HAVE CONVERGED
- ==================================
-    CREATING OUTPUT DATA FILES
- ==================================
-STARTING CHAIN CLUSTERING
-Initial number of chains: 100
-Final number of chains: 100
-
---------------------------------------------------------------
-Summary:
-N_chains         =      100
-N_iter           =      500
-thin_factor      =        1
-N_rv_data        =       36
-N_tr_data        =      112
-N_data           =      148
-N_pars           =        8
-chi2_rv          = 7.2765
-chi2_tr          = 125.9964
-chi2             = 133.2729
-dof              =      140
-chi2/dof         = 0.9519
-ln likelihood_rv = 377.7453
-ln likelihood_tr = 1131.1755
-ln likelihood    = 1508.9208
-BIC              = -2977.8640
-AIC              = -3001.8417
---------------------------------------------------------------
-             INPUT STELLAR PARAMETERS
---------------------------------------------------------------
-M_*     = 1.0000000 - 0.1000000 + 0.1000000 solar masses
-R_*     = 1.0000000 - 0.1000000 + 0.1000000 solar radii
-T_*     = 5772.0000000 - 100.0000000 + 100.0000000 K
---------------------------------------------------------------
-                   Parameters test b
--------------------------Fitted-------------------------------
-        T0 = 2448285.0955436 - 0.0031192 + 0.0031409     days
-         P = 365.2508520 - 0.0049167 + 0.0048356     days
-      ew 1 = 0.0000000 - 0.0000000 + 0.0000000
-      ew 2 = 0.0000000 - 0.0000000 + 0.0000000
-         b = 0.0000000 - 0.0000000 + 0.0000000
-      a/R* = 215.4640517 - 2.3708930 + 2.5122541
-     rp/R* = 0.0093235 - 0.0000712 + 0.0000775
-         K = 0.0881821 - 0.0024223 + 0.0023856      m/s
--------------------------Derived------------------------------
-        Mp = 0.9841032 - 0.0704355 + 0.0718640  M_earth
-        Rp = 1.0173252 - 0.1028264 + 0.1013333  R_earth
-         e = 0.0000000 - 0.0000000 + 0.0000000
-         w = 0.0000000 - 0.0000000 + 0.0000000      deg
-         i = 90.0000000 - 0.0000000 + 0.0000000      deg
-         a = 1.0019439 - 0.1014392 + 0.1005043       AU
-Insolation = 0.9967687 - 0.0707513 + 0.0741733  F_Earth
-      rho* = 1.4183711 - 0.0463035 + 0.0502306 g/cm^3 (transit)
-      rho* = 1.4065628 - 0.3676615 + 0.5586840 g/cm^3 (stellar paramters)
-     rho_p = 5.1298925 - 1.3074050 + 1.9887038   g/cm^3
-       g_p = 936.8970215 - 30.5861395 + 32.3670771 cm/s^2 (K and Rp/R*)
-       g_p = 933.8572371 - 172.6787114 + 234.1233896 cm/s^2 (planet parameters)
-     Tperi = 2448193.7827742 - 0.0039813 + 0.0041039     days
-       Teq = 278.1026529 - 5.0720559 + 5.0352570 K (albedo=0)
-     T_tot = 13.0713846 - 0.1507021 + 0.1448215    hours
-    T_full = 12.8294707 - 0.1483685 + 0.1432300    hours
---------------------------------------------------------------
---------------------  Other parameters -----------------------
-        q1 = 0.3760168 - 0.0418577 + 0.0442539
-        q2 = 0.3157777 - 0.0460379 + 0.0468480
-        u1 = 0.3855446 - 0.0574350 + 0.0598140
-        u2 = 0.2246861 - 0.0583548 + 0.0612362
-Sys. vel. Super_telescope = 22.0719865 - 0.0000015 + 0.0000016      m/s
---------------------------------------------------------------
-
-Creating  outpy/test_out/test_posterior.pdf
-Creating  outpy/test_out/test_correlations.pdf
-Creating  outpy/test_out/testb_tr.pdf
-Creating  outpy/test_out/test_rv_all.pdf
-Creating  outpy/test_out/testb_rv.pdf
 
 ```
 If you see this output it means that pyaneti ended succesfully!
@@ -331,7 +173,7 @@ env OMP_NUM_THREADS=2 ./pyaneti.py test
 
 ## Science  with pyaneti
 
-* Prieto-Arranz et al., 2018, _Mass determination of the 1:3:5 near-resonant planets transiting GJ 9827 (K2-135)_, 
+* Prieto-Arranz et al., 2018, _Mass determination of the 1:3:5 near-resonant planets transiting GJ 9827 (K2-135)_,
 [A&A, submitted](https://arxiv.org/abs/1802.09557)
 * Barragán et al., 2018, _K2-141 b: A 5-M_Earth super-Earth transiting a K7 V star every 6.7 hours_
 [A&A, 612, A95](http://adsabs.harvard.edu/abs/2017arXiv171102097B)
@@ -401,4 +243,3 @@ archivePrefix = "arXiv",
 * Jorge Prieto-Arranz, thank you for all the suggestions which have helped to improve the code.
 
 **THANKS A LOT!**
-

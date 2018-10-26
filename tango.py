@@ -27,6 +27,9 @@ sigma3 = 3*error_mean
 fvec = fvec*100.
 evec = evec*100.
 
+#Estimate number of iterations
+niter = (tmax - tmin)/vel_time
+
 #This function calcualtes the time of periastron given
 #Time of minimum conjunction, eccentricit, angle of periastron, period.
 #----------------------------------------------------------
@@ -115,7 +118,7 @@ while continuar:
 #---------------------------------------------------------------
 #                         DATA
 #---------------------------------------------------------------
-  fsize = 4
+  fsize = 6
   df = 0.13*(100.-min(fvec))
   plt.figure(1,figsize=(fsize,fsize))
   #plt.xkcd()
@@ -161,7 +164,7 @@ while continuar:
   m = n
   if (n == 0):
     m = 1
-  for j in range(0,int(np.log10(len(tvec)))-int(np.log10(m))):
+  for j in range(0,int(np.log10(niter))-int(np.log10(m))):
      file_name = file_name + '0'
   file_name = file_name+str(n)+'.png'
   plt.savefig(file_name,dpi=300,bbox_inches='tight')
@@ -179,7 +182,7 @@ while continuar:
 #                    Start  movie creation
 #---------------------------------------------------------------
 
-os.system('convert -delay 1/20 -resize x700  '+system+'/*.png '+system+'/'+system+'.mp4')
+os.system('convert -delay '+str(frate)+' -resize x700  '+system+'/*.png '+system+'/'+system+'.mp4')
 
 #---------------------------------------------------------------
 #                    End movie creation
