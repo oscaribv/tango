@@ -48,29 +48,10 @@ vel_time  = 1./200.
 tmin =  2963.2
 #Animation maximum time (Be sure that you are using the same units as in your data file)
 tmax =  2964.4
-#
-frate = 1/50.
 
 #--------------------------------------------------------------------
 #                     Plot controls
 #--------------------------------------------------------------------
-
-#Labels to appear in the animations
-#X-axis of the model plot (upper plot)
-xlabel = 'Time [days]'
-#Y-axis of the model plot (upper plot)
-ylabel = 'Stellar light [%]'
-#X and Y-axes for the planets animation
-skylabel = 'Sky [$R_\star$]'
-
-#Control colors
-#For nice colors in hexagesimal format  see https://www.colorhexa.com/
-cmodel = "#34495e"
-cdata = "#e74c3c"
-cstar = "#ffbf00"
-
-#Control if we want to plot the error bars in the data
-is_plot_errorbars = True
 
 #Control if we overplot the light curve model
 #You need to have installed pyaneti in your computer to use it

@@ -1,8 +1,11 @@
 
-# __TANGO__: Transit ANimation for General Orbits
+
+# __TANGO__
+## Transit ANimation for General Orbits
 #### Written by Oscar Barragán
 ##### email: oscaribv@gmail.com
 ##### Updated October 25, 2018
+
 
 
 ## __Introduction__
@@ -25,16 +28,13 @@ If the orbit inclination is close to 90°, the presence of a planet orbiting its
 ## Animate *K2* data of GJ 9827
 
 The system GJ 9827 contains (at least) three transiting planets. They were discovered by *K2* on its Campaign 12 ( see [Niraula et al., 2017](http://iopscience.iop.org/article/10.3847/1538-3881/aa957c/meta), [Prieto-Arranz et al., 2018](https://www.aanda.org/articles/aa/abs/2018/10/aa32872-18/aa32872-18.html), and [Rodriguez et al., 2017](http://iopscience.iop.org/article/10.3847/1538-3881/aaa292/meta) for more details).
-The brightness of this star combined with the exquisite photometry of *Kepler*, give us a marvelous light curve where the three transiting planets are visible. During February 12, 2017, planets b, c and d transited the star consecutively, and this was observed by *Kepler*. __We will animate this!__
+The brightness of this star combined with the exquisite photometry of *Kepler*, give us a marvelous light curve where the three transiting planets are visible. During February 12, 2017, planets b, c and d transited the star consecutively, and this was observed by *Kepler*. __We will animate this now!__
 
-First, just clone or download TANGO.
+First, just clone TANGO.
 
 ```
 git clone https://github.com/oscaribv/tango
 ```
-
-The advantage about cloning the repository is the possibility to follow the changes to this package easily with git pull (learn more about git
-at [https://git-scm.com/](https://git-scm.com/)).
 
 The next step is to enter the tango directory and see what we can find inside it
 
@@ -48,198 +48,118 @@ You can see that there is a directory called gj9827. This directory contains the
 
 So now we have the light curve that we want to animate. The next step is to create the input file which will be used to pass the orbit solutions to the code. If you open the input file you will see something like This
 
+```py
+#Input file for tango
+#system: GJ 9827
+#Created by O. Barragan, October 2018.
 
-Now you are ready to run the code for the first time! Just type
+#Data file with the flattened light curve
+lcname = 'lc_gj9827.dat'
 
+#--------------------------------------------------------------------
+#                 Planet and orbit parameters
+# Each parameter is a list in which each element
+# correspond to a planet. For this case, there are three
+# planets. But you can create animations with 1, 2, 3, and more planets.
+#--------------------------------------------------------------------
 
-```
-./pyaneti.py test
-```
+#This file was creating using the values reported in Prieto-Arranz et al., (2018)
+#Orbital period (days)
+P =[1.2089662,3.6482269,6.2014190]
+#time of mid-transit (days) Be sure that you are using the same units that in your data file
+T0 = [2905.8264631,2905.5496113,2907.9619764]
+#Orbit eccentricity
+e = [0.,0.,0.]
+#Angle of periastron
+w = [0.,0.,0.]
+#Scaled semi-major axis
+a = [7.229235,15.096,21.5019118]
+#orbit inclination (degrees)
+inclination = [88.330714*np.pi/180,89.06*np.pi/180,87.702*np.pi/180]
+#Scaled planet radius (Rp/R*)
+rp = [0.0232259,0.0181983,0.0299279]
+#Limb darkening coefficients following a quadratic law
+u1 =  0.58
+u2 =  0.15
+#Next two variables are used to control the cadence of the light curve data
+#Integration time of the data
+t_cad = 30./60./24.
+#Number of steps to integrate the data
+n_cad = 10
+#These values are useful now to integrate Kepler long cadence data
 
-or
+#--------------------------------------------------------------------
+#              Animation controls
+#--------------------------------------------------------------------
+#Window size to show the data (days)
+size_time = 0.5
+#1./(photograms per day) in this case the code will create a photogram each 7.2 min
+vel_time  = 1./200.
+#Animation minimum time (Be sure that you are using the same units as in your data file)
+tmin =  2963.2
+#Animation maximum time (Be sure that you are using the same units as in your data file)
+tmax =  2964.4
 
-```
-python pyaneti.py test
-```
+#--------------------------------------------------------------------
+#                     Plot controls
+#--------------------------------------------------------------------
 
-The program will start. You will see something like:
+#Control if we overplot the light curve model
+#You need to have installed pyaneti in your computer to use it
+is_plot_model = False
 
-```
-
-```
-If you see this output it means that pyaneti ended succesfully!
-
-Now let us check the plots.
-
-```
-evince outpy/test_out/testb_tr.pdf outpy/test_out/testb_rv.pdf
-
-```
-
-You will see some nice plots that look like this
-
-
-<img src="./src/images/testb_tr.png" style="width: 250px;"/>
-<img src="./src/images/testb_rv.png" style="width: 250px;"/>
-
-Let me explain you briefly what this test fit was about:
-> If you were an advanced alien civilization with really high technology, and "lucky" enough to see an Earth-like planet crossing in front of a Sun-like star, **this is how the Earth would look like to you**.
-
-Look at those well-known parameters:
-* 1 Earth Mass
-* 1 Earth radii
-* Period of 365 days
-* 1 AU semi-major axis
-* Density of ~5.5 g/cm^2,
-* Gravity of ~10 m/s^2.
-
-Of course you would need a spectograph with a precision of a few cm/s and also a very nice photometer.
-
-> If you are at this point, you learned two things. First, with good data you can obtain really nice planet parameters and second, you learned how to run pyaneti.
-
-
-## Documentation
-
-#### Play with _test_ - Joint radial velocity and transit light curve fitting.
-
-* There is a directory called _inpy_, inside this folder you will find a second directory called _test_.
-
-* This directory constains the input and data files to perform the test fit.
-
-* You can create an input director inside _inpy_ for each of your systems!
-
-* We encorauge you to start to play with the code.
-
-Create your own test directory and copy all the files from _inpy/test_ folder.
-
-```
-mkdir inpy/my_test
-cp inpy/test/* inpy/my_test
+#-----------------------------------------------------------------
+#                         END
+#-----------------------------------------------------------------
 ```
 
-Now you are ready to run _my_test_
+Now that we have our input file ready, it is time to run TANGO to create our first animation.
+Just type (the process takes some time)
 
 ```
-./pyaneti.py my_test
+$ python tango.py gj9827
+  Creating png files
+  png files have been created
+  Creating animation
+  Your animation is ready at gj9827/gj9827.gif
 ```
 
-You will see an output similar to that the _test_ case.
-Now the output files are inside _outpy/my_test_out_. You will notice that inside this
-directory you will find a extra file with the posterior distribution and correlation plots of the fitted parameters.
+If you see something like this appearing in your terminal, now you have created your animation of GJ 9827. Open the file gj9827/gj9827.gif and you will see this
 
-Now open the file _inpy/my_test/input_fit.py_ and start to play with it. The file is comented.
-Let us change the priors for some parameters. Uncomment lines 56, 91 and 92
-to fit for the scaled semi-major axis and impact factor. Save the changes and
-re-run the code.
+<p align="center">
+  <img width = "500" src=".images/gj9827.gif"/>
+</p>
 
-```
-./pyaneti.py my_test
-```
+What is this? The upper panel of the animation shows the *K2* photometric time-series. Each point represent the integrated flux received at the *Kepler* detector at different times.
+There are some clear flux drops, which we know are caused by transiting planets. The lower panel shows the reconstructed planets' paths in the sky. The position of the planets represent the data acquired at the time marked with a vertical dashed line in the upper panel. We can see how the three planets cross the stellar disk one after the other causing a whimsical flux variation.
 
-Now you can see that the fitted parameters are different in comparison with
-the values given by _test_.
+## Animate *K2* data and model of GJ 9827
 
-If you have some RV and/or transit data you only have to put the name
-of your data files, change the prior ranges, and start to fit your data!
+Now that we have learned how to create an animation with TANGO, maybe we wan to to over-plot the inferred light curve model to to show how our parameters can explain the observations. This can be easily done by changing only one line in the input file for GJ 9827.
 
-#### Parallel run
-
-Run the code in parallel is really easy.
-
-Just compile the code in parallel (you need openMP installed).
+TANGO uses the code *pyaneti* to create the model that will be over-plotted on the animation. This tutorial assumes that you do not have *pyaneti* installed in your computer. So, first clone *pyaneti* in your home directory
 
 ```
-make para
+cd
+git clone https://github.com/oscaribv/pyaneti
 ```
 
-if you have all the libraries installed, the compilation should finish without any problem.
-Now you only need to run the code.
+The next step is to compile *pyaneti* (for details about dependencies click [here](https://github.com/oscaribv/pyaneti))
 
 ```
-./pyaneti.py test
+cd pyaneti
+make
 ```
 
-This option will run the code with all the processors available in your computer.
-If you want to specify the number of CPUs to be use by _pyaneti_, you have to run the
-env OMP_NUM_THREADS=N option, where N is the number of CPUs.
+If you have all the dependencies installed, the compilation should end without error. Now the next step is to add *pyaneti* to your PYTHON path. I am using a Linux computer, so this is done in the `.bashrc` file (this can vary for other operating systems). Copy the next line in your `.bashrc` or equivalent file
 
 ```
-env OMP_NUM_THREADS=2 ./pyaneti.py test
+export PYTHONPATH=$PYTHONPATH:/home/oscar/pyaneti
 ```
-
-
-**More documentation will come soon!**
-
-
-## Science  with pyaneti
-
-* Prieto-Arranz et al., 2018, _Mass determination of the 1:3:5 near-resonant planets transiting GJ 9827 (K2-135)_,
-[A&A, submitted](https://arxiv.org/abs/1802.09557)
-* Barragán et al., 2018, _K2-141 b: A 5-M_Earth super-Earth transiting a K7 V star every 6.7 hours_
-[A&A, 612, A95](http://adsabs.harvard.edu/abs/2017arXiv171102097B)
-* Niraula et al., 2017, _Three Small Super-Earths Transiting the nearby star GJ 9827_, [AJ, in press.](http://adsabs.harvard.edu/abs/2017arXiv170901527N).
-* Gandolfi et al., 2017, _The transiting multi-planet system HD3167: a 5.7 MEarth Super-Earth and a 8.3 MEarth mini-Neptune_,
-[AJ, 154, 123.](http://adsabs.harvard.edu/abs/2017AJ....154..123G)
-* Guenther et al., 2017, _K2-106, a system containing a metal rich planet and a planet of lower density_,
-[A&A, in press.](https://arxiv.org/abs/1705.04163).
-* Fridlund et al., 2017, _K2-111 b - A short period super-Earth transiting a metal poor, evolved old star_,
-[A&A, 604, A16](http://adsabs.harvard.edu/abs/2017A%26A...604A..16F).
-* Barragán et al., 2017, _K2-139 b: a low-mass warm Jupiter on a 29-day orbit transiting an active K0V star_,
-[MNRAS, submitted](https://arxiv.org/abs/1702.00691).
-* Nespral et al., 2017, _Mass determination of K2-19b and K2-19c from radial velocities and transit timing variations_,
-[A&A, 601A, 128.](http://adsabs.harvard.edu/abs/2017A%26A...601A.128N).
-* Barragán et al, 2016, _K2-98b: A 32-M⊕ Neptune-sized planet in a 10-day orbit transiting an F8 star_,
- [AJ, 152, 6](http://adsabs.harvard.edu/abs/2016AJ....152..193B).
-
-**See the list of citations to the code [here](https://ui.adsabs.harvard.edu/#abs/2017ascl.soft08003B/citations)**
-
-## Citing
-
-If you use pyaneti in your research, please cite it as
-
-```
-Barragán, O., Gandolfi, D., & Antoniciello, G. 2018, ArXiv e-prints [arXiv:1809.04609]
-```
-
-you can use the bibTeX entry
-
-```
-@ARTICLE{pyaneti,
-   author = {{Barrag{\'a}n}, O. and {Gandolfi}, D. and {Antoniciello}, G.
-	},
-    title = "{pyaneti: a fast and powerful software suite for multi-planet radial velocity and transit fitting}",
-  journal = {\mnras},
-archivePrefix = "arXiv",
-   eprint = {1809.04609},
- primaryClass = "astro-ph.EP",
- keywords = {methods: numerical, planets and satellites: general, techniques: photometry, techniques: spectroscopy},
-     year = 2018,
-    month = sep,
-      doi = {10.1093/mnras/sty2472},
-   adsurl = {http://adsabs.harvard.edu/abs/2018MNRAS.tmp.2361B},
-  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
-}
-```
-
-## What will come next?
-
-* Gaussian process.
-* TTV.
-* Multiband transit photometry fitting.
-* Graphical User Interface.
 
 
 **If you have any comments, requests, suggestions or just need any help, please don't think twice, just contact us!**
 
 ##
 
-#### Warning: This code is under developement and it may contain bugs. If you find something please contact us at oscaribv@gmail.com
-
-## Acknowledgements
-* Hannu Parviainen, thank you for helping us to interpret the first result of the PDF of the MCMC chains. We learned a lot from you!
-* Salvador Curiel, thank you for  suggestions to parallelize the code.
-* Mabel Valerdi, thank you for being the first _pyaneti_ user, for spotting typos and errors in this document. And thank you much for the awesome idea for pyaneti's logo.
-* Lauren Flor, thank you for testing the code before release.
-* Jorge Prieto-Arranz, thank you for all the suggestions which have helped to improve the code.
-
-**THANKS A LOT!**
+#### Warning: This code is under developement and it may contain bugs. If you find something please contact me at oscaribv@gmail.com

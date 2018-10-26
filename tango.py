@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 #Start TANGO as ./tango.py system
 system = str(sys.argv[1])
 
+execfile('src/default.py')
+
 execfile(system+'/input.py')
 
 #number of planets
@@ -29,34 +31,6 @@ evec = evec*100.
 
 #Estimate number of iterations
 niter = (tmax - tmin)/vel_time
-
-#This function calcualtes the time of periastron given
-#Time of minimum conjunction, eccentricit, angle of periastron, period.
-#----------------------------------------------------------
-def find_tp(T0,e,w,P):
-  ereal = e + np.cos(np.pi/2. - w)
-  eimag = np.sqrt(1. - e*e) * np.sin( np.pi / 2. - w )
-  theta_p = np.arctan2(eimag,ereal)
-  theta_p = theta_p - e * np.sin(theta_p)
-  Tp = T0 - theta_p * P / 2. / np.pi
-  return Tp
-
-#This function calculates the true anomaly
-#----------------------------------------------------------
-def find_anomaly(t,Tp,e,P):
-  mean = 2.*np.pi * ( t - Tp) / P                     #mean anomaly
-  true = mean + e * np.sin(mean)                      #guess
-  f = true - e * np.sin(true) - mean                  #first value of function f
-  for o in range(0,len(t)):                           #iterate for all the values
-      while np.abs(f[o]) > 1e-6:                      #Newton-Raphson condition
-        f[o] = true[o] - e*np.sin(true[o]) - mean[o]  #calculate  f
-        df   = 1. - e * np.cos(true[o])               #Calculate df
-        true[o] = true[o] - f[o]/df                   #Update the eccentric anomaly
-  eimag = np.sqrt(1. - e*e)*np.sin(true)              #Time to calculate true anomaly
-  ereal = np.cos(true) - e
-  true  = np.arctan2(eimag,ereal)                     #Get True anomaly from ecc anomaly
-  return true
-#----------------------------------------------------------
 
 #Create the flux vector
 pars2 = np.zeros(shape=(npl,7))
@@ -88,13 +62,13 @@ for o in range(0,npl):
   R[o] = a[o]*(1-e[o]**2)/(1. + e[o]*np.cos(nu[o]) ) 
   X[o] = - R[o] * ( np.cos(nu[o] + w[o]) )
   Y[o] = - R[o] * ( np.sin(nu[o] + w[o]) * np.cos(inclination[o]) )
-#
 
 
 continuar = True
 min_loc = tmin
 max_loc = tmin + size_time
 n = 1
+print 'Creating png files'
 while continuar:
   estet = []
   estef = []
@@ -176,13 +150,19 @@ while continuar:
     continuar = False
   else:
     n = n + 1
+
+print 'png files have been created'
 #---------------------------------------------------------------
 #                      END plot creation
 #---------------------------------------------------------------
 #                    Start  movie creation
 #---------------------------------------------------------------
 
-os.system('convert -delay '+str(frate)+' -resize x700  '+system+'/*.png '+system+'/'+system+'.mp4')
+print 'Creating animation'
+
+os.system('convert -delay '+str(frate)+' -resize x700  '+system+'/*.png '+system+'/'+system+'.gif')
+
+print 'Your animation is ready in '+system+'/'+system+'.gif'
 
 #---------------------------------------------------------------
 #                    End movie creation
