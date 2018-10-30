@@ -45,7 +45,7 @@ for o in range(0,npl):
 if is_plot_model:
   #Import pyaneti code
   import pyaneti as pti
-  xtr_model = np.arange(min(tvec),max(tvec),0.0025)
+  xtr_model = np.arange(min(tvec)-size_time,max(tvec)+size_time,0.0025)
   fluxtr_model = pti.flux_tr(xtr_model,pars2.transpose(),[0,0,0,0],[u1,u2],n_cad,t_cad)
   fluxtr_model = fluxtr_model*100
 
