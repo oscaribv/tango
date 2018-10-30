@@ -124,14 +124,16 @@ $ python tango.py gj9827
   Your animation is ready at gj9827/gj9827.gif
 ```
 
-If you see something like this appearing in your terminal, now you have created your animation of GJ 9827. Open the file gj9827/gj9827.gif and you will see this
+If you see something like this appearing in your terminal, now you have created your animation of GJ 9827. Open the file `gj9827/gj9827.gif` and you will see this
 
 <p align="center">
   <img width = "500" src=".images/gj9827.gif"/>
 </p>
 
 What is this? The upper panel of the animation shows the *K2* photometric time-series. Each point represent the integrated flux received at the *Kepler* detector at different times.
-There are some clear flux drops, which we know are caused by transiting planets. The lower panel shows the reconstructed planets' paths in the sky. The position of the planets represent the data acquired at the time marked with a vertical dashed line in the upper panel. We can see how the three planets cross the stellar disk one after the other causing a whimsical flux variation.
+There are some clear flux drops, which we know are caused by transiting planets. The lower panel shows the reconstructed planets' paths in the sky. The position of the planets represent the data acquired at the time marked with a vertical dashed line in the upper panel.
+ We can see how the three planets cross the stellar disk one after the other causing a whimsical flux variation.
+ The planet and star sizes are to scale!
 
 ## Animate *K2* data and model of GJ 9827
 
@@ -157,9 +159,36 @@ If you have all the dependencies installed, the compilation should end without e
 export PYTHONPATH=$PYTHONPATH:/home/oscar/pyaneti
 ```
 
+This will allow python to load *pyaneti* as a library. Now you are ready to plot the model in your animation! Just have to change the variable `is_plot_model` to `True` inside `gj9827/input.py` file.
 
-**If you have any comments, requests, suggestions or just need any help, please don't think twice, just contact us!**
+```py
+#--------------------------------------------------------------------
+#                     Plot controls
+#--------------------------------------------------------------------
 
-##
+#Control if we overplot the light curve model
+#You need to have installed pyaneti in your computer to use it
+is_plot_model = True
+```
 
-#### Warning: This code is under developement and it may contain bugs. If you find something please contact me at oscaribv@gmail.com
+and re-run *TANGO*
+
+```
+$ python tango.py gj9827
+  Creating png files
+  png files have been created
+  Creating animation
+  Your animation is ready at gj9827/gj9827.gif
+```
+
+Now your `gj9827/gj9827.gif` animation should look like this
+
+<p align="center">
+  <img width = "500" src=".images/gj9827model.gif"/>
+</p>
+
+The animation shows the same features as the previous example, but this time we can see the inferred model of the stellar flux caused by the transiting planets. Note how the model (upper panel) appears according to the position of the planets (lower panel).
+
+## Have Fun!
+
+**If you have any comments, requests, suggestions or just need any help, please don't think twice, just contact me!**
