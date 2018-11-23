@@ -1,20 +1,26 @@
-
-
 # __TANGO__
 ## Transit ANimation for General Orbits
+
+<p align="center">
+  <img width = "300" src=".images/k2141.gif"/>
+</p>
+
 #### Written by Oscar Barragán
 ##### email: oscaribv@gmail.com
-##### Updated October 25, 2018
+##### Updated: November 2018
 
 
 
 ## __Introduction__
 
-A clear night gives us an instantaneous snapshot of the Universe. At first sight celestial bodies seem immutable. Their apparent immutability disappears if we add an important ingredient: *time*.
-The variability of their light – the so-called light curve – carries a wealth of precious information about the physical phenomena happening in faraway astronomical bodies.
 
 Planets perform a gravitational *TANGO* around their parent stars which is called orbit.
-If the orbit inclination is close to 90°, the presence of a planet orbiting its host star can be inferred by detecting the periodic drops of stellar flux caused by the planet partly occulting the stellar disk. This phenomenon is called __transit__.
+If the orbit inclination is close to 90°, the presence of a planet orbiting its host 
+star can be inferred by detecting the periodic drops of stellar flux caused by the planet partly occulting the stellar disk. 
+This phenomenon is called __transit__.
+If we observe the transits caused by planets in stellar light curves (flux *vs* time),
+we are able to decode the gravitational coreography and obtain planetary and orbital
+properties of the system.
 
 
 ## Dependencies
@@ -22,7 +28,7 @@ If the orbit inclination is close to 90°, the presence of a planet orbiting its
 * numpy
 * matplotlib
 * seaborn (optional)
-* [pyaneti](https://github.com/oscaribv/pyaneti) (optional, needed if you want to plot the models)
+* [pyaneti](https://github.com/oscaribv/pyaneti) (optional, if you want to plot the models)
 
 
 ## Animate *K2* data of GJ 9827
