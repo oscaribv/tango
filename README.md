@@ -1,5 +1,4 @@
-# __TANGO__
-## Transit ANimation for General Orbits
+# __TANGO__: Transit ANimation for General Orbits
 
 <p align="center">
   <img width = "300" src=".images/k2141.gif"/>
@@ -47,7 +46,7 @@ The next step is to enter the tango directory and see what we can find inside it
 ```
 cd tango
 ls
-  gj9827  README.md  tango.py
+  gj9827  README.md src tango.py
 ```
 
 You can see that there is a directory called gj9827. This directory contains the light curve and input file needed to create your animation. The file lc_gj9827.dat contains *K2* long cadence data collected between 2963.5 and 2964.3 (BJD - 2454833) days. In this window there are three consecutive transits of GJ 9827 b, c and d (I used the light curve provided by EVEREST to create this file).
