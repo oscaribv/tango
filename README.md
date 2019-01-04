@@ -194,6 +194,12 @@ Now your `gj9827/gj9827.gif` animation should look like this
 
 The animation shows the same features as the previous example, but this time we can see the inferred model of the stellar flux caused by the transiting planets. Note how the model (upper panel) appears according to the position of the planets (lower panel).
 
+## New: Automatic creation of tango input files with [`pyaneti`](https://github.com/oscaribv/pyaneti)
+
+If you use the code [`pyaneti`](https://github.com/oscaribv/pyaneti) to fit your transits, the input file to animate such transits is created automatically.
+
+Click [here](https://github.com/oscaribv/pyaneti/wiki/Output-files#star_tango_inputpy) to learn more details about this.
+
 ## Have Fun!
 
 **If you have any comments, requests, suggestions or just need any help, please don't think twice, just contact me!**
