@@ -9,6 +9,9 @@ import os
 from matplotlib import gridspec
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set(style='ticks')
+sns.set_color_codes()
 
 #Start TANGO as ./tango.py system
 system = str(sys.argv[1])
@@ -23,6 +26,8 @@ npl = len(P)
 #Read the data file
 tvec, fvec, evec = np.loadtxt(system+'/'+lcname,unpack=True,usecols=(0,1,2))
 
+tvec = np.asarray(tvec)/24.
+
 error_mean = np.mean(evec)
 sigma3 = 3*error_mean
 
@@ -30,23 +35,24 @@ fvec = fvec*100.
 evec = evec*100.
 
 #Estimate number of iterations
-niter = (tmax - tmin)/vel_time
+niter = int((tmax - tmin)/vel_time)
+print(tmax,tmin,vel_time,niter)
 
 #Create the flux vector
-pars2 = np.zeros(shape=(npl,7))
+pars2 = np.zeros(shape=(npl,6))
 for o in range(0,npl):
   #Calculate time of periastron
   #Tp = pti.find_tp(T0[o],e[o],w[o],P[o])
   Tp = find_tp(T0[o],e[o],w[o],P[o])
   #Fill vector with parameters
-  pars2[o][:] = [Tp,P[o],e[o],w[o],inclination[o],a[o],rp[o]]
+  pars2[o][:] = [Tp,P[o],e[o],w[o],inclination[o],a[o]]
 
 
 if is_plot_model:
   #Import pyaneti code
   import pyaneti as pti
-  xtr_model = np.arange(min(tvec)-size_time,max(tvec)+size_time,0.0025)
-  fluxtr_model = pti.flux_tr(xtr_model,pars2.transpose(),[u1,u2],n_cad,t_cad)
+  xtr_model = np.arange(min(tvec)-size_time,max(tvec)+size_time,0.0005)
+  fluxtr_model = pti.flux_tr(xtr_model,[0]*len(xtr_model),pars2.transpose(),rp,[u1,u2],n_cad,t_cad,1)
   fluxtr_model = fluxtr_model*100
 
 #Let us create the coordinates for the plot
@@ -94,10 +100,10 @@ while continuar:
 #---------------------------------------------------------------
   fsize = 6
   df = 0.13*(100.-min(fvec))
-  plt.figure(1,figsize=(fsize,fsize))
+  fig = plt.figure(1,figsize=(fsize,fsize))
   #plt.xkcd()
   gs = gridspec.GridSpec(nrows=2, ncols=1,height_ratios=[1.4, 1.])
-  plt.subplot(gs[0])
+  ax0 = plt.subplot(gs[0])
   plt.ylim(min(fvec)-df,max(fvec)+df)
   plt.xlim(min_loc,min_loc+size_time)
   plt.axvline(x=min_loc+size_time/2.,c='r',ls='--')
@@ -106,14 +112,20 @@ while continuar:
   if is_plot_errorbars :
     plt.errorbar(estet,estef,estee,fmt='o',color=cdata)
   else:
-    plt.plot(estet,estef,'o',color=cdata)
-  if is_plot_model: plt.plot(modt,modf,'k',color=cmodel)
+    plt.plot(estet,estef,'o',color=cdata,alpha=0.75)
+  if is_plot_model: plt.plot(modt,modf,'k',color=cmodel,zorder=2)
   plt.minorticks_on()
   plt.tick_params( axis='x',which='both',direction='in')
   plt.tick_params( axis='y',which='both',direction='in')
   plt.tick_params(labelsize=fsize)
   plt.xlabel(xlabel,fontsize=fsize)
   plt.ylabel(ylabel,fontsize=fsize)
+  xticks = ax0.get_xticks()
+  xticks = list(xticks)
+  for j in range(0,len(xticks)):
+      xticks[j] = round(xticks[j],3)
+  #ax0.set_xticklabels(xticks)
+  ax0.set_xticklabels(xticks[0:len(xticks)-2])
 #---------------------------------------------------------------
 #                         Star-planets
 #---------------------------------------------------------------
@@ -132,7 +144,7 @@ while continuar:
   plt.xlabel(skylabel,fontsize=fsize)
   plt.ylabel(skylabel,fontsize=fsize)
   plt.tick_params(labelsize=fsize)
-#  plt.annotate('@oscaribv',xy=(0.84,0.91),xycoords='figure fraction',alpha=0.7,fontsize=10)
+  plt.annotate(system,xy=(0.12,0.37),xycoords='figure fraction',alpha=0.5,fontsize=10)
 #
   file_name = system + '/' + system + '-'
   m = n
@@ -141,6 +153,7 @@ while continuar:
   for j in range(0,int(np.log10(niter))-int(np.log10(m))):
      file_name = file_name + '0'
   file_name = file_name+str(n)+'.png'
+  fig.set_size_inches(fsize,fsize)
   plt.savefig(file_name,dpi=300,bbox_inches='tight')
   plt.close()
   #Now let us evolve the video
@@ -160,7 +173,15 @@ print 'png files have been created'
 
 print 'Creating animation'
 
-os.system('convert -delay '+str(frate)+' -resize x700  '+system+'/*.png '+system+'/'+system+'.gif')
+import glob
+import moviepy.editor as mpy
+
+gif_name = system
+fps = frate
+file_list = sorted(glob.glob(system+'/*.png')) # Get all the pngs in the current directory
+clip = mpy.ImageSequenceClip(file_list, fps=1./fps)
+clip.write_gif(system+'/'+system+'.gif')
+clip.write_videofile(system+'/'+system+'.mp4')
 
 print 'Your animation is ready in '+system+'/'+system+'.gif'
 
