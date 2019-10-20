@@ -4,6 +4,7 @@
 #---------------------------------------------------------------
 
 #Load libraries
+from __future__ import print_function, division, absolute_import
 import sys
 import os
 from matplotlib import gridspec
@@ -16,9 +17,9 @@ sns.set_color_codes()
 #Start TANGO as ./tango.py system
 system = str(sys.argv[1])
 
-execfile('src/default.py')
+exec(open('src/default.py').read())
 
-execfile(system+'/input.py')
+exec(open(system+'/input.py').read())
 
 #number of planets
 npl = len(P)
@@ -74,7 +75,7 @@ continuar = True
 min_loc = tmin
 max_loc = tmin + size_time
 n = 1
-print 'Creating png files'
+print('Creating png files')
 while continuar:
   estet = []
   estef = []
@@ -164,26 +165,14 @@ while continuar:
   else:
     n = n + 1
 
-print 'png files have been created'
+print('png files have been created')
 #---------------------------------------------------------------
 #                      END plot creation
 #---------------------------------------------------------------
 #                    Start  movie creation
 #---------------------------------------------------------------
 
-print 'Creating animation'
-
-import glob
-import moviepy.editor as mpy
-
-gif_name = system
-fps = frate
-file_list = sorted(glob.glob(system+'/*.png')) # Get all the pngs in the current directory
-clip = mpy.ImageSequenceClip(file_list, fps=1./fps)
-clip.write_gif(system+'/'+system+'.gif')
-clip.write_videofile(system+'/'+system+'.mp4')
-
-print 'Your animation is ready in '+system+'/'+system+'.gif'
+exec(open('src/moviepy_src.py').read())
 
 #---------------------------------------------------------------
 #                    End movie creation
