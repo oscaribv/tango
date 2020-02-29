@@ -1,4 +1,6 @@
-# __TANGO__: Transit ANimation for General Orbits
+# __TANGO__
+
+## Animate exoplanet transits!
 
 <p align="center">
   <img width = "300" src=".images/k2141.gif"/>
@@ -6,16 +8,15 @@
 
 #### Written by Oscar Barragán
 ##### email: oscaribv@gmail.com
-##### Updated: November 29, 2018
-
-
+##### October, 2018
+##### Updated: March, 2020
 
 ## __Introduction__
 
 
-Planets perform a gravitational *TANGO* around their parent stars which is called orbit.
+Planets perform a gravitational *TANGO* around their host stars which is called orbit.
 If the orbit inclination is close to 90°, the presence of a planet orbiting its host 
-star can be inferred by detecting the periodic drops of stellar flux caused by the planet partly occulting the stellar disk. 
+star can be inferred by detecting the periodic drops of stellar flux caused by the planet partly occulting the stellar disc. 
 This phenomenon is called __transit__.
 If we observe the transits caused by planets in stellar light curves (flux *vs* time),
 we are able to decode the gravitational coreography and obtain planetary and orbital
@@ -26,7 +27,9 @@ properties of the system.
 
 * numpy
 * matplotlib
-* seaborn (optional)
+* seaborn 
+* glob
+* moviepy
 * [pyaneti](https://github.com/oscaribv/pyaneti) (optional, if you want to plot the models)
 
 
@@ -41,7 +44,7 @@ First, just clone TANGO.
 git clone https://github.com/oscaribv/tango
 ```
 
-The next step is to enter the tango directory and see what we can find inside it
+The next step is to enter the `tango` directory and see what we can find inside it
 
 ```
 cd tango
@@ -49,7 +52,7 @@ ls
   gj9827  README.md src tango.py
 ```
 
-You can see that there is a directory called gj9827. This directory contains the light curve and input file needed to create your animation. The file lc_gj9827.dat contains *K2* long cadence data collected between 2963.5 and 2964.3 (BJD - 2454833) days. In this window there are three consecutive transits of GJ 9827 b, c and d (I used the light curve provided by EVEREST to create this file).
+You can see that there is a directory called gj9827. This directory contains the light curve and input file needed to create your animation. The file lc_gj9827.dat contains *K2* long cadence data collected between 2963.5 and 2964.3 (BJD - 2454833) days. In this window there are three consecutive transits of GJ 9827 b, c and d (I used the light curve provided by [`EVEREST`](https://github.com/rodluger/everest) to create this file).
 
 So now we have the light curve that we want to animate. The next step is to create the input file which will be used to pass the orbit solutions to the code. If you open the input file you will see something like This
 
@@ -203,3 +206,4 @@ Click [here](https://github.com/oscaribv/pyaneti/wiki/Output-files#star_tango_in
 ## Have Fun!
 
 **If you have any comments, requests, suggestions or just need any help, please don't think twice, just contact me!**
+
