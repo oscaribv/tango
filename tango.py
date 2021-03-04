@@ -51,8 +51,7 @@ if is_plot_model:
     xtr_model = np.arange(min(tvec)-size_time,max(tvec)+size_time,0.0001)
     fluxtr_model = [1]*len(xtr_model)
     for o in range(npl):
-        #tm = QuadraticModel(interpolate=False)
-        tm = QuadraticModel()
+        tm = QuadraticModel(interpolate=False)
         tm.set_data(xtr_model,exptimes=t_cad,nsamples=n_cad)
         fluxtr_planet = tm.evaluate(k=rp[o], ldc=[u1,u2], t0=T0[o], p=P[o], a=a[o], i=inclination[o])
         #Avoid errors because of occultations calculated by pytransit
