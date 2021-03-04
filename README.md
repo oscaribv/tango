@@ -1,6 +1,9 @@
 # __TANGO__
+<<<<<<< HEAD
 
 ## Animate exoplanet transits!
+=======
+>>>>>>> 5b852599b0bb8bec88ea001f02b724d8d508651f
 
 <p align="center">
   <img width = "300" src=".images/k2141.gif"/>
