@@ -1,6 +1,8 @@
 #---------------------------------------------------------------
-#       TANGO: Transit ANimation for General Orbits 
-#             October 2018, Oscar Barragan
+#                        TANGO 
+#               Animate exoplanet transits!
+#              October 2018, Oscar Barragan
+#           Updated March 2021, Oscar Barragan
 #---------------------------------------------------------------
 
 #Load libraries
@@ -27,8 +29,6 @@ npl = len(P)
 #Read the data file
 tvec, fvec, evec = np.loadtxt(system+'/'+lcname,unpack=True,usecols=(0,1,2))
 
-tvec = np.asarray(tvec)/24.
-
 error_mean = np.mean(evec)
 sigma3 = 3*error_mean
 
@@ -37,24 +37,28 @@ evec = evec*100.
 
 #Estimate number of iterations
 niter = int((tmax - tmin)/vel_time)
-print(tmax,tmin,vel_time,niter)
 
 #Create the flux vector
-pars2 = np.zeros(shape=(npl,6))
-for o in range(0,npl):
+#pars2 = np.zeros(shape=(npl,6))
+Tp = [None]*npl
+for o in range(npl):
   #Calculate time of periastron
-  #Tp = pti.find_tp(T0[o],e[o],w[o],P[o])
-  Tp = find_tp(T0[o],e[o],w[o],P[o])
-  #Fill vector with parameters
-  pars2[o][:] = [Tp,P[o],e[o],w[o],inclination[o],a[o]]
+  Tp[o] = find_tp(T0[o],e[o],w[o],P[o])
+#  #Fill vector with parameters used to compute the orbits
+#  pars2[o] = [Tp,P[o],e[o],w[o],inclination[o],a[o],rp[o]]
 
 
 if is_plot_model:
-  #Import pyaneti code
-  import pyaneti as pti
-  xtr_model = np.arange(min(tvec)-size_time,max(tvec)+size_time,0.0005)
-  fluxtr_model = pti.flux_tr(xtr_model,[0]*len(xtr_model),pars2.transpose(),rp,[u1,u2],n_cad,t_cad,1)
-  fluxtr_model = fluxtr_model*100
+    from pytransit import QuadraticModel
+    #Let us use PyTransit to compute the transits
+    xtr_model = np.arange(min(tvec)-size_time,max(tvec)+size_time,0.0005)
+    fluxtr_model = [1]*len(xtr_model)
+    for o in range(npl):
+        tm = QuadraticModel(interpolate=False)
+        tm.set_data(xtr_model,exptimes=t_cad,nsamples=n_cad)
+        fluxtr_model *= tm.evaluate(k=rp[o], ldc=[u1,u2], t0=T0[o], p=P[o], a=a[o], i=inclination[o])
+    #Change the model to percentage
+    fluxtr_model *= 100
 
 #Let us create the coordinates for the plot
 nu = [None]*npl
@@ -62,9 +66,9 @@ R = [None]*npl
 X = [None]*npl
 Y = [None]*npl
 min_t =  tmin + size_time/2.0 
-ptime = np.arange(min_t,max(tvec),vel_time)
+ptime = np.arange(min_t,tmax+size_time,vel_time)
 for o in range(0,npl):
-  nu[o] = find_anomaly(ptime,pars2[o][0],e[o],P[o])
+  nu[o] = find_anomaly(ptime,Tp[o],e[o],P[o])
 #We have the true anomaly, time to calculate R
   R[o] = a[o]*(1-e[o]**2)/(1. + e[o]*np.cos(nu[o]) ) 
   X[o] = - R[o] * ( np.cos(nu[o] + w[o]) )
@@ -135,6 +139,7 @@ while continuar:
   ax1.add_artist(star)
   planet = [None]*npl
   for j in range(0,npl):
+    #if ( Y[j][n-1] < 0 or np.sqrt(X[j][n-1]**2 + Y[j][n-1]**2) > 1 ):
     if ( Y[j][n-1] < 0 or np.sqrt(X[j][n-1]**2 + Y[j][n-1]**2) > 1 ):
       planet[j] = plt.Circle((X[j][n-1],Y[j][n-1]),rp[j],color='k')
       ax1.add_artist(planet[j])
@@ -155,7 +160,8 @@ while continuar:
      file_name = file_name + '0'
   file_name = file_name+str(n)+'.png'
   fig.set_size_inches(fsize,fsize)
-  plt.savefig(file_name,dpi=300,bbox_inches='tight')
+  #plt.savefig(file_name,dpi=300,bbox_inches='tight')
+  plt.savefig(file_name,bbox_inches='tight')
   plt.close()
   #Now let us evolve the video
   min_loc = min_loc + vel_time
