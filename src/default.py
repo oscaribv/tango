@@ -37,6 +37,10 @@ t_cad = 30./60./24.
 n_cad = 10
 #These values are useful now to integrate Kepler long cadence data
 
+#The code can estimate the stellar colour based on Halle & Heller 2021
+#Assuming is a black body given a T_eff
+T_star = 4200
+
 #--------------------------------------------------------------------
 #              Animation controls
 #--------------------------------------------------------------------
@@ -49,7 +53,7 @@ tmin =  2963.2
 #Animation maximum time (Be sure that you are using the same units as in your data file)
 tmax =  2964.4
 #frame rate
-frate = 1./50.
+frate = 1./24.
 
 #--------------------------------------------------------------------
 #                     Plot controls

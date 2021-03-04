@@ -39,13 +39,10 @@ evec = evec*100.
 niter = int((tmax - tmin)/vel_time)
 
 #Create the flux vector
-#pars2 = np.zeros(shape=(npl,6))
 Tp = [None]*npl
 for o in range(npl):
   #Calculate time of periastron
   Tp[o] = find_tp(T0[o],e[o],w[o],P[o])
-#  #Fill vector with parameters used to compute the orbits
-#  pars2[o] = [Tp,P[o],e[o],w[o],inclination[o],a[o],rp[o]]
 
 
 if is_plot_model:
@@ -74,6 +71,13 @@ for o in range(0,npl):
   X[o] = - R[o] * ( np.cos(nu[o] + w[o]) )
   Y[o] = - R[o] * ( np.sin(nu[o] + w[o]) * np.cos(inclination[o]) )
 
+#Let us find the stellar colour
+teff = np.loadtxt('src/colours.dat',unpack=True,comments='!',usecols=0)
+col  = np.loadtxt('src/colours.dat',unpack=True,comments='!',usecols=1,dtype=str)
+#Let us compute the closses teff to our T_star
+difs = abs(teff-T_star)
+#Let us select the index that matches better our T_star
+cstar = col[np.argmin(difs)]
 
 continuar = True
 min_loc = tmin

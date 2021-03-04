@@ -20,7 +20,7 @@ T0 = [2905.8264631,2905.5496113,2907.9619764]
 #Orbit eccentricity
 e = [0.,0.,0.]
 #Angle of periastron
-w = [0.,0.,0.]
+w = [np.pi/2,np.pi/2,np.pi/2]
 #Scaled semi-major axis
 a = [7.229235,15.096,21.5019118]
 #orbit inclination (degrees)
@@ -37,17 +37,24 @@ t_cad = 30./60./24.
 n_cad = 10
 #These values are useful now to integrate Kepler long cadence data
 
+#The code can estimate the stellar colour based on Halle & Heller 2021
+#Assuming is a black body given a stellar temperature T_star in Kelvin
+T_star = 4200 #K
+
+
 #--------------------------------------------------------------------
 #              Animation controls
 #--------------------------------------------------------------------
 #Window size to show the data (days)
 size_time = 0.5 
 #1./(photograms per day) in this case the code will create a photogram each 7.2 min
-vel_time  = 1./200.
+vel_time  = 1./500.
 #Animation minimum time (Be sure that you are using the same units as in your data file)
-tmin =  2963.2
+tmin =  2963.3
 #Animation maximum time (Be sure that you are using the same units as in your data file)
-tmax =  2964.4
+tmax =  2964.3
+#frame rate
+frate = 1./24.
 
 #--------------------------------------------------------------------
 #                     Plot controls
