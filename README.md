@@ -1,12 +1,9 @@
 # __TANGO__
-<<<<<<< HEAD
 
 ## Animate exoplanet transits!
-=======
->>>>>>> 5b852599b0bb8bec88ea001f02b724d8d508651f
 
 <p align="center">
-  <img width = "300" src=".images/k2141.gif"/>
+  <img width = "300" src="https://github.com/oscaribv/oscaribv.github.io/blob/master/images/tango/k2141.gif"/>
 </p>
 
 #### Written by Oscar Barragán
@@ -155,7 +152,7 @@ $ python tango.py gj9827
 If you see something like this appearing in your terminal, now you have created your animation of GJ 9827. Open the file `gj9827/gj9827.gif` and you will see this
 
 <p align="center">
-  <img width = "500" src=".images/gj9827.gif"/>
+  <img width = "500" src="https://github.com/oscaribv/oscaribv.github.io/blob/master/images/tango/gj9827.gif"/>
 </p>
 
 #### What is this?
@@ -205,7 +202,7 @@ $ python tango.py gj9827
 Now your `gj9827/gj9827.gif` animation should look like this
 
 <p align="center">
-  <img width = "500" src=".images/gj9827model.gif"/>
+  <img width = "500" src="https://github.com/oscaribv/oscaribv.github.io/blob/master/images/tango/gj9827model.gif"/>
 </p>
 
 The animation shows the same features as the previous example, but this time we can see the inferred model of the stellar flux caused by the transiting planets. Note how the model (upper panel) appears according to the position of the planets (lower panel).
