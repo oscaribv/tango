@@ -9,7 +9,7 @@
 #### Written by Oscar Barragán
 ##### email: oscaribv@gmail.com
 ##### October, 2018
-##### Updated: March, 2020
+##### Updated: March, 2021
 
 ## __Introduction__
 
@@ -21,6 +21,8 @@ This phenomenon is called __transit__.
 If we observe the transits caused by planets in stellar light curves (flux *vs* time),
 we are able to decode the gravitational coreography and obtain planetary and orbital
 properties of the system.
+This code helps you to visualise how the planet's motion was looking when they were 
+transiting the stellar disc.
 
 
 ## Dependencies
@@ -30,7 +32,7 @@ properties of the system.
 * seaborn 
 * glob
 * moviepy
-* [pyaneti](https://github.com/oscaribv/pyaneti) (optional, if you want to plot the models)
+* [pytransit](https://github.com/hpparvi/PyTransit) (optional, if you want to plot the models)
 
 
 ## Animate *K2* data of GJ 9827
@@ -54,12 +56,15 @@ ls
 
 You can see that there is a directory called gj9827. This directory contains the light curve and input file needed to create your animation. The file lc_gj9827.dat contains *K2* long cadence data collected between 2963.5 and 2964.3 (BJD - 2454833) days. In this window there are three consecutive transits of GJ 9827 b, c and d (I used the light curve provided by [`EVEREST`](https://github.com/rodluger/everest) to create this file).
 
-So now we have the light curve that we want to animate. The next step is to create the input file which will be used to pass the orbit solutions to the code. If you open the input file you will see something like This
+So now we have the light curve that we want to animate. 
+The next step is to create the input file that will be used to pass the orbit solutions to the code. 
+If you open the input file you will see something like this
 
 ```py
 #Input file for tango
 #system: GJ 9827
 #Created by O. Barragan, October 2018.
+#Modified by O. Barragan, March 2021
 
 #Data file with the flattened light curve
 lcname = 'lc_gj9827.dat'
@@ -79,7 +84,7 @@ T0 = [2905.8264631,2905.5496113,2907.9619764]
 #Orbit eccentricity
 e = [0.,0.,0.]
 #Angle of periastron
-w = [0.,0.,0.]
+w = [np.pi/2,np.pi/2,np.pi/2]
 #Scaled semi-major axis
 a = [7.229235,15.096,21.5019118]
 #orbit inclination (degrees)
@@ -93,20 +98,27 @@ u2 =  0.15
 #Integration time of the data
 t_cad = 30./60./24.
 #Number of steps to integrate the data
-n_cad = 10
+n_cad = 30
 #These values are useful now to integrate Kepler long cadence data
+
+#The code can estimate the stellar colour based on Halle & Heller 2021
+#Assuming is a black body given a stellar temperature T_star in Kelvin
+T_star = 4200 #K
+
 
 #--------------------------------------------------------------------
 #              Animation controls
 #--------------------------------------------------------------------
 #Window size to show the data (days)
-size_time = 0.5
+size_time = 0.5 
 #1./(photograms per day) in this case the code will create a photogram each 7.2 min
-vel_time  = 1./200.
+vel_time  = 1./500.
 #Animation minimum time (Be sure that you are using the same units as in your data file)
-tmin =  2963.2
+tmin =  2963.3
 #Animation maximum time (Be sure that you are using the same units as in your data file)
-tmax =  2964.4
+tmax =  2964.3
+#frame rate
+frate = 1./24.
 
 #--------------------------------------------------------------------
 #                     Plot controls
@@ -129,6 +141,11 @@ $ python tango.py gj9827
   Creating png files
   png files have been created
   Creating animation
+  MoviePy - Building file gj9827/gj9827.gif with imageio.
+  Moviepy - Building video gj9827/gj9827.mp4.
+  Moviepy - Writing video gj9827/gj9827.mp4
+
+  Moviepy - Done !
   Your animation is ready at gj9827/gj9827.gif
 ```
 
@@ -138,36 +155,29 @@ If you see something like this appearing in your terminal, now you have created 
   <img width = "500" src=".images/gj9827.gif"/>
 </p>
 
-What is this? The upper panel of the animation shows the *K2* photometric time-series. Each point represent the integrated flux received at the *Kepler* detector at different times.
+#### What is this?
+
+The upper panel of the animation shows the *K2* photometric time-series. Each point represent the integrated flux received at the *Kepler* detector at different times.
 There are some clear flux drops, which we know are caused by transiting planets. The lower panel shows the reconstructed planets' paths in the sky. The position of the planets represent the data acquired at the time marked with a vertical dashed line in the upper panel.
- We can see how the three planets cross the stellar disk one after the other causing a whimsical flux variation.
+We can see how the three planets cross the stellar disk one after the other causing a whimsical flux variation.
  The planet and star sizes are to scale!
 
 ## Animate *K2* data and model of GJ 9827
 
-Now that we have learned how to create an animation with TANGO, maybe we wan to to over-plot the inferred light curve model to to show how our parameters can explain the observations. This can be easily done by changing only one line in the input file for GJ 9827.
+Now that we have learned how to create an animation with TANGO, maybe we wan to to over-plot 
+the inferred light curve model to to show how our parameters can explain the observations. 
+This can be easily done by changing only one line in the input file for GJ 9827.
 
-TANGO uses the code *pyaneti* to create the model that will be over-plotted on the animation. This tutorial assumes that you do not have *pyaneti* installed in your computer. So, first clone *pyaneti* in your home directory
-
-```
-cd
-git clone https://github.com/oscaribv/pyaneti
-```
-
-The next step is to compile *pyaneti* (for details about dependencies click [here](https://github.com/oscaribv/pyaneti))
+TANGO uses the code *pytransit* to create the model that will be over-plotted on the animation.
+ This tutorial assumes that you do not have *pytransit* installed in your computer. 
+ To install *pytransit* you just need to type in your terminal
 
 ```
-cd pyaneti
-make
+pip install pytransit
 ```
 
-If you have all the dependencies installed, the compilation should end without error. Now the next step is to add *pyaneti* to your PYTHON path. I am using a Linux computer, so this is done in the `.bashrc` file (this can vary for other operating systems). Copy the next line in your `.bashrc` or equivalent file
-
-```
-export PYTHONPATH=$PYTHONPATH:/home/oscar/pyaneti
-```
-
-This will allow python to load *pyaneti* as a library. Now you are ready to plot the model in your animation! Just have to change the variable `is_plot_model` to `True` inside `gj9827/input.py` file.
+and this will install *pytransit* in your machine. For more details visit *pytransit* [website](https://github.com/hpparvi/PyTransit).
+Now you are ready to plot the model in your animation! Just have to change the variable `is_plot_model` to `True` inside `gj9827/input.py` file.
 
 ```py
 #--------------------------------------------------------------------
@@ -196,12 +206,6 @@ Now your `gj9827/gj9827.gif` animation should look like this
 </p>
 
 The animation shows the same features as the previous example, but this time we can see the inferred model of the stellar flux caused by the transiting planets. Note how the model (upper panel) appears according to the position of the planets (lower panel).
-
-## New: Automatic creation of tango input files with [`pyaneti`](https://github.com/oscaribv/pyaneti)
-
-If you use the code [`pyaneti`](https://github.com/oscaribv/pyaneti) to fit your transits, the input file to animate such transits is created automatically.
-
-Click [here](https://github.com/oscaribv/pyaneti/wiki/Output-files#star_tango_inputpy) to learn more details about this.
 
 ## Have Fun!
 

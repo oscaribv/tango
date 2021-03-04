@@ -1,6 +1,7 @@
 #Input file for tango
 #system: GJ 9827
 #Created by O. Barragan, October 2018.
+#Modified by O. Barragan, March 2021
 
 #Data file with the flattened light curve
 lcname = 'lc_gj9827.dat'
@@ -34,7 +35,7 @@ u2 =  0.15
 #Integration time of the data
 t_cad = 30./60./24.
 #Number of steps to integrate the data
-n_cad = 10
+n_cad = 30
 #These values are useful now to integrate Kepler long cadence data
 
 #The code can estimate the stellar colour based on Halle & Heller 2021
