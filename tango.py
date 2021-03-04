@@ -48,12 +48,18 @@ for o in range(npl):
 if is_plot_model:
     from pytransit import QuadraticModel
     #Let us use PyTransit to compute the transits
-    xtr_model = np.arange(min(tvec)-size_time,max(tvec)+size_time,0.0005)
+    xtr_model = np.arange(min(tvec)-size_time,max(tvec)+size_time,0.0001)
     fluxtr_model = [1]*len(xtr_model)
     for o in range(npl):
-        tm = QuadraticModel(interpolate=False)
+        #tm = QuadraticModel(interpolate=False)
+        tm = QuadraticModel()
         tm.set_data(xtr_model,exptimes=t_cad,nsamples=n_cad)
-        fluxtr_model *= tm.evaluate(k=rp[o], ldc=[u1,u2], t0=T0[o], p=P[o], a=a[o], i=inclination[o])
+        fluxtr_planet = tm.evaluate(k=rp[o], ldc=[u1,u2], t0=T0[o], p=P[o], a=a[o], i=inclination[o])
+        #Avoid errors because of occultations calculated by pytransit
+        phase = abs(((xtr_model-T0[o])%P[o])/P[o])
+        phase[phase>0.5] -= 1
+        fluxtr_planet[abs(phase)>0.125] = 1.
+        fluxtr_model *= fluxtr_planet
     #Change the model to percentage
     fluxtr_model *= 100
 
