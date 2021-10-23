@@ -66,12 +66,17 @@ xlabel = 'Time [days]'
 ylabel = 'Stellar light [%]'
 #X and Y-axes for the planets animation
 skylabel = 'Sky [$R_\star$]'
+#Turn on/off a logarithmic scale for the x-axis
+xaxis_log = False
+#If xaxis_log = True, we can choose the limit for the x-axis
+xlimit = 50
 
 #Control colors
 #For nice colors in hexagesimal format  see https://www.colorhexa.com/
 cmodel = "#34495e"
-cdata = "#e74c3c"
+cdata = None
 cstar = "#ffbf00"
+dark_mode = False
 
 #Control if we want to plot the error bars in the data
 is_plot_errorbars = True

@@ -84,6 +84,8 @@ difs = abs(teff-T_star)
 #Let us select the index that matches better our T_star
 cstar = col[np.argmin(difs)]
 
+if cdata == None: cdata = cstar
+
 continuar = True
 min_loc = tmin
 max_loc = tmin + size_time
@@ -112,6 +114,7 @@ while continuar:
 #---------------------------------------------------------------
 #                         DATA
 #---------------------------------------------------------------
+  if dark_mode: plt.style.use('dark_background')
   fsize = 6
   df = 0.13*(100.-min(fvec))
   fig = plt.figure(1,figsize=(fsize,fsize))
@@ -126,8 +129,8 @@ while continuar:
   if is_plot_errorbars :
     plt.errorbar(estet,estef,estee,fmt='o',color=cdata)
   else:
-    plt.plot(estet,estef,'o',color=cdata,alpha=0.75)
-  if is_plot_model: plt.plot(modt,modf,'k',color=cmodel,zorder=2)
+    plt.plot(estet,estef,'o',color=cdata,alpha=0.5)
+  if is_plot_model: plt.plot(modt,modf,'k',color=cmodel,zorder=5)
   plt.minorticks_on()
   plt.tick_params( axis='x',which='both',direction='in')
   plt.tick_params( axis='y',which='both',direction='in')
@@ -150,9 +153,15 @@ while continuar:
   for j in range(0,npl):
     #if ( Y[j][n-1] < 0 or np.sqrt(X[j][n-1]**2 + Y[j][n-1]**2) > 1 ):
     if ( Y[j][n-1] < 0 or np.sqrt(X[j][n-1]**2 + Y[j][n-1]**2) > 1 ):
-      planet[j] = plt.Circle((X[j][n-1],Y[j][n-1]),rp[j],color='k')
+      pcolor = 'k'
+      if dark_mode: pcolor = '#ffffff'
+      planet[j] = plt.Circle((X[j][n-1],Y[j][n-1]),rp[j],color=pcolor)
       ax1.add_artist(planet[j])
   plt.xlim(-4,4)
+  if xaxis_log:
+    plt.xlim(-xlimit,xlimit)
+    plt.xscale('symlog')
+  plt.minorticks_on()
   plt.ylim(-1.5,1.5)
   plt.tick_params( axis='x',which='both',direction='in')
   plt.tick_params( axis='y',which='both',direction='in')
@@ -170,6 +179,8 @@ while continuar:
   file_name = file_name+str(n)+'.png'
   fig.set_size_inches(fsize,fsize)
   #plt.savefig(file_name,dpi=300,bbox_inches='tight')
+  #plt.style.use('dark_background')
+  #plt.savefig(file_name,bbox_inches='tight',transparent=True)
   plt.savefig(file_name,bbox_inches='tight')
   plt.close()
   #Now let us evolve the video
